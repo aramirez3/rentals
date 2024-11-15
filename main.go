@@ -35,7 +35,7 @@ func main() {
 	server.Handler.Handle("/", http.FileServer(http.Dir("static/")))
 	server.Handler.HandleFunc("/healthz", handlerHealthcheck)
 
-	fmt.Printf("Booting up on http://localhost%v\n", server.Addr)
+	fmt.Printf("Running at http://localhost%v\n", server.Addr)
 	err = http.ListenAndServe(server.Addr, middlewareServer(server.Handler))
 	if err != nil {
 		fmt.Println(err)
