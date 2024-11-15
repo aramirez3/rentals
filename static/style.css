@@ -1,0 +1,10 @@
+@media (prefers-color-scheme: dark) {
+    :root {
+        color-scheme: dark light;
+    }
+
+    body {
+        background-color: light-dark(#fff, #111);
+        color: light-dark(#111, #fff);
+    }
+}
