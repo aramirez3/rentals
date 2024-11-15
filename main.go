@@ -5,35 +5,38 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/joho/godotenv"
 )
+
+type Server struct {
+	Addr    string
+	Handler *http.ServeMux
+}
 
 func main() {
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
+
 	port := os.Getenv("PORT")
-	fmt.Printf("PORT: [%v]\n", port)
 	if port == "" {
 		log.Fatal("PORT env variable is not set")
 	}
 
 	// apiConfig := apiConfig{}
 
-	server := http.Server{
-		Addr:        ":" + port,
-		Handler:     http.NewServeMux(),
-		ReadTimeout: time.Duration(5 * time.Second),
+	server := Server{
+		Addr:    ":" + port,
+		Handler: http.NewServeMux(),
 	}
 
-	fmt.Println("Hello world")
-
 	server.Handler.Handle("/", http.FileServer(http.Dir("static/")))
+	server.Handler.HandleFunc("/healthz", handlerHealthcheck)
+
 	fmt.Printf("Booting up on http://localhost%v\n", server.Addr)
-	err = http.ListenAndServe(server.Addr, server.Handler)
+	err = http.ListenAndServe(server.Addr, middlewareServer(server.Handler))
 	if err != nil {
 		fmt.Println(err)
 	}

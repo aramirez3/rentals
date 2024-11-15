@@ -6,5 +6,7 @@
     body {
         background-color: light-dark(#fff, #111);
         color: light-dark(#111, #fff);
+        max-width: 960px;
+        margin: 0 auto;
     }
 }
